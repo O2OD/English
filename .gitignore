@@ -1,0 +1,29 @@
+# Maxfiy ma'lumotlar (Bot token va baza parollari GitHub'ga tushmasligi shart!)
+.env
+.env.*
+
+# Python kesh fayllari
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual muhit (Virtual environments)
+venv/
+.venv/
+env/
+ENV/
+
+# Ma'lumotlar bazasi va Docker ma'lumotlari
+pgdata/
+*.sqlite3
+*.db
+
+# IDE sozlamalari
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Loglar
+*.log
