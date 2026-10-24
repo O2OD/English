@@ -31,4 +31,3 @@ def setup_scheduler(bot: Bot) -> AsyncIOScheduler:
     scheduler.add_job(send_daily_reminders, "cron", hour="8,14,21", minute=0, args=[bot])
     scheduler.start()
     return scheduler
-.
