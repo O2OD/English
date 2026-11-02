@@ -23,6 +23,9 @@ from app.database import async_session, User, Dictionary, Word
 
 router = Router()
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SAMPLE_PHOTO_PATH = os.path.join(BASE_DIR, "sample.jpg")
+
 # --- FSM HOLATLARI ---
 class BotStates(StatesGroup):
     waiting_dict_name = State()
@@ -216,7 +219,7 @@ async def cmd_start(message: Message, command: CommandObject, state: FSMContext,
             logging.error(f"Ulashish havolasi xatosi: {e}")
 
     # Bosh menyu
-    photo_path = "sample.jpg"
+    photo_path = SAMPLE_PHOTO_PATH
     caption = (
         "👋 <b>Lug'at yodlash platformasiga xush kelibsiz!</b>\n\n"
         "📋 So'zlarni kiritish namunasi yuqoridagi rasmda ko'rsatilgan.\n\n"
@@ -232,7 +235,7 @@ async def cmd_start(message: Message, command: CommandObject, state: FSMContext,
 @router.callback_query(F.data == "back_to_hub")
 async def back_to_hub_callback(call: CallbackQuery, state: FSMContext):
     await state.clear()
-    photo_path = "sample.jpg"
+    photo_path = SAMPLE_PHOTO_PATH
     caption = (
         "👋 <b>Asosiy menyu:</b>\n\n"
         "Quyidagi bo'limlardan birini tanlang:"
@@ -251,7 +254,7 @@ async def back_to_hub_callback(call: CallbackQuery, state: FSMContext):
 @router.callback_query(F.data == "action_help")
 @router.message(Command("help"))
 async def help_cmd(event: Message | CallbackQuery):
-    photo_path = "sample.jpg"
+    photo_path = SAMPLE_PHOTO_PATH
     caption = (
         "💡 <b>Qo'llanma:</b>\n\n"
         "1. Yuqoridagi rasmdagidek qilib so'zlarni tayyorlang.\n"
@@ -319,7 +322,7 @@ async def action_create_dict_cb(event: Message | CallbackQuery, state: FSMContex
     await state.clear()
     await state.set_state(BotStates.waiting_dict_name)
 
-    photo_path = "sample.jpg"
+    photo_path = SAMPLE_PHOTO_PATH
     caption = (
         "✍️ <b>Yangi lug'at yaratish:</b>\n\n"
         "1. Avval lug'at nomini yozib yuboring (Masalan: <i>English 1-kun</i> yoki <i>IELTS Unit 3</i>).\n"
@@ -391,7 +394,7 @@ async def handle_dict_name(message: Message, state: FSMContext):
     await state.update_data(dict_name=name)
     await state.set_state(BotStates.waiting_words)
 
-    photo_path = "sample.jpg"
+    photo_path = SAMPLE_PHOTO_PATH
     caption = (
         f"✅ <b>\"{name}\"</b> lug'ati ochildi!\n\n"
         "Xuddi shu rasmdagidek qilib so'zlarni yozing yoki tayyorini copy qilib bitta xabarda tashlang.\n\n"
@@ -418,7 +421,7 @@ async def handle_words_input(message: Message, state: FSMContext, bot: Bot):
 
     words_to_add = extract_words_from_text(message.text)
     if not words_to_add:
-        photo_path = "sample.jpg"
+        photo_path = SAMPLE_PHOTO_PATH
         caption = (
             "⚠️ <b>So'zlar aniqlanmadi!</b>\n\n"
             "Xuddi shu rasmdagidek qilib so'zlarni yozing yoki tayyorini copy qilib bitta xabarda tashlang.\n\n"
@@ -620,7 +623,7 @@ async def add_words_cb(call: CallbackQuery, state: FSMContext):
     await state.update_data(dict_id=dict_id, dict_name=dict_name)
     await state.set_state(BotStates.waiting_words)
 
-    photo_path = "sample.jpg"
+    photo_path = SAMPLE_PHOTO_PATH
     caption = (
         f"➕ <b>\"{dict_name}\"</b> lug'atiga yangi so'zlar qo'shish:\n\n"
         "Xuddi shu rasmdagidek qilib yangi so'zlarni bitta xabarda yuboring."
@@ -1128,7 +1131,7 @@ async def quiz_to_main_menu_cb(call: CallbackQuery):
         await call.message.delete()
     except Exception:
         pass
-    photo_path = "sample.jpg"
+    photo_path = SAMPLE_PHOTO_PATH
     caption = "👋 <b>Asosiy menyu:</b>\n\nQuyidagi bo'limlardan birini tanlang:"
     if os.path.exists(photo_path):
         await call.message.answer_photo(photo=FSInputFile(photo_path), caption=caption, reply_markup=get_start_hub_kb(), parse_mode="HTML")
